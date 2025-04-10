@@ -1,0 +1,49 @@
+class A
+var
+begin
+  method fun():
+  var
+  begin
+    print!("a, fun");
+    print!(this);
+  end;
+end;
+
+class A2
+var
+begin
+end;
+
+class A<T> : A, A2
+var
+begin
+  method fun():
+  var
+  begin
+    print!("a<T>, fun");
+    print!(this);
+  end;
+end;
+
+class B<T> : A<array [,,] of T>
+var
+begin
+  method build():
+  var
+  begin
+    return make!<T>();
+  end;
+end;
+
+method main(): int
+var
+  a, b, c, d;
+begin
+  b = make!<B<A<string>>>();
+  a = b.build();
+
+  print!(type!(a));
+  a.fun();
+
+  return cast!<int>(0);
+end;

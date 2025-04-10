@@ -1,0 +1,7 @@
+config source language
+file io/suite28.txt.asm.out
+info target
+b 0 7
+b 0 23
+run
+continue

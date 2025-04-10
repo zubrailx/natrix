@@ -1,0 +1,8 @@
+method one(): int from "read" in "example";
+method two(): int from "example";
+method three(): void;
+
+method main(): void
+var
+begin
+end;

@@ -1,0 +1,28 @@
+// io
+method std_write(a: any): void;
+
+// io_extern
+extern method std_read_bool(): bool;
+extern method std_read_byte(): byte;
+extern method std_read_char(): char;
+extern method std_read_int(): int;
+extern method std_read_uint(): uint;
+extern method std_read_long(): long;
+extern method std_read_ulong(): ulong;
+extern method std_read_string(): string;
+
+extern method std_write_bool(v: bool): void;
+extern method std_write_byte(v: byte): void;
+extern method std_write_char(v: char): void;
+extern method std_write_int(v: int): void;
+extern method std_write_uint(v: uint): void;
+extern method std_write_long(v: long): void;
+extern method std_write_ulong(v: ulong): void;
+extern method std_write_string(v: string): void;
+
+// test_extern
+extern method std_test_first(): byte;
+extern method std_test_args(a: bool, b: byte, c: int, d: uint, e: long, f: ulong, g: char, h: string): void;
+
+// math
+method std_abs(a: any): any;

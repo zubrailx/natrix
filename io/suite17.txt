@@ -1,0 +1,9 @@
+method main(self, a, b): int
+var
+  c: array [] of int;
+  n;
+begin
+  self.a = 4;
+  ++self[4][2];
+  if a then b; else return 0;
+end;

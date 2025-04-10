@@ -1,0 +1,65 @@
+class A
+var
+begin
+end;
+
+class A<T>
+var
+  f: int;
+begin
+  method two(a, b, c): int
+  var
+    d: array [] of T;
+  begin
+  end
+
+  method ctor(a, b, c): A<T>
+  var
+  begin
+    // initialize something
+    return this;
+  end
+end;
+
+class A<T, U>
+var
+  e: U;
+  n;
+begin
+  method import_entry(): int from "u" in "a";
+  method three(a, b, c): int
+  var
+    d: array [] of U;
+  begin
+   cast!<A<A<int>>>();
+   return 1 + 2 * 3 * a;
+  end
+end;
+
+class B<T, U> : A<T, U>, A<T>, A
+var
+  a: array [] of T;
+  b, c: byte;
+begin
+  method import_entry(): int from "read" in "example";
+  method import_lib(): int from "example";
+  method three(a, b, c): int // NOTE: should have same signatures
+  var
+    d: array [] of long;
+  begin
+  end
+end;
+
+method main(): void
+begin
+  make!<B<char, A<int, array [] of A<string>>>>();
+  external_func();
+  imported_func2();
+end;
+
+method external_main(): void;
+method external_main2(): void;
+method external_func(): void;
+
+method imported_func(): void from "lib_name" in "entry_name";
+method imported_func2(): void from "lib2_name";

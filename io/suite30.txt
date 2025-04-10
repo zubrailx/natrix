@@ -1,0 +1,53 @@
+class Math
+var
+begin
+  method add(b: any): any
+  var
+  begin
+    return "not implemented!";
+  end;
+end;
+
+class Vector : Math
+var
+  x, y;
+begin
+  method add(other: any): any
+  var
+    r;
+  begin
+     r = make!<Vector>();
+     r.x = this.x + other.x;
+     r.y = this.y + other.y;
+     return r;
+  end;
+end;
+
+method fun(a, b): any
+var
+begin
+  print!(a, b);
+end;
+
+method main(): int
+var
+  a, b, c, d;
+begin
+  a = make!<Vector>();
+  a.x = 1;
+  a.y = 2;
+
+  if a.x != 1 then begin
+    std_write("error: a.x != 1\n");
+    return cast!<int>(-1);
+  end
+
+  b = make!<Vector>();
+  b.x = 10;
+  b.y = 20;
+
+  std_write(a.add(b));
+  std_write("\n");
+
+  return cast!<int>(0);
+end;

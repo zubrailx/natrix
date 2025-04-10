@@ -1,0 +1,59 @@
+method factorial(n):
+begin
+  if (n == 0) then
+    return 1;
+  else if (n == 1) then
+    return 1;
+  else begin
+    return n * factorial(n - 1);
+  end
+end;
+
+method main(): int
+var
+  n: long;
+  a, b, c, d, e, f, g, h;
+begin
+  a = true;
+  b = cast!<byte>(42);
+  c = cast!<int>(-42);
+  d = cast!<uint>(53);
+  e = cast!<long>(-53333);
+  f = cast!<ulong>(53333);
+  print!(f);
+  g = 'a';
+  h = "hello";
+  std_test_args(a, b, c, d, e, f, g, h);
+
+  std_write_bool(a);
+  std_write_string("\n");
+  std_write_byte(b);
+  std_write_string("\n");
+  std_write_char(g);
+  std_write_string("\n");
+  std_write_int(c);
+  std_write_string("\n");
+  std_write_uint(d);
+  std_write_string("\n");
+  std_write_long(e);
+  std_write_string("\n");
+  std_write_ulong(f);
+  std_write_string("\n");
+  std_write_string(h);
+  std_write_string("\n");
+
+  std_write("absolute value of ");
+  std_write(e);
+  std_write("=");
+  std_write(std_abs(e));
+  std_write("\n");
+
+  n = 10;
+  std_write("factorial of ");
+  std_write(n);
+  std_write(" is ");
+  std_write(factorial(n));
+  std_write("\n");
+
+  return cast!<int>(0);
+end;

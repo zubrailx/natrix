@@ -1,0 +1,38 @@
+class A
+var
+begin
+  method fun_a():
+  var
+  begin
+    print!("a, fun");
+  end;
+end;
+
+class B
+var
+begin
+  method fun_b():
+  var
+  begin
+    print!("b, fun");
+  end;
+end;
+
+method main(): int
+var
+  a, b;
+begin
+  a = make!<A>();
+  a.fun_a();
+  b = make!<B>();
+  b.fun_b();
+
+  print!(type!(a));
+  print!(type!(b));
+
+  a.fun_a = b.fun_b;
+  a.fun_a();
+  b.fun_b();
+
+  return cast!<int>(0);
+end;

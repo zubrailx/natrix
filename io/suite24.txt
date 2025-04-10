@@ -1,0 +1,16 @@
+class A
+var
+begin
+end;
+
+method main(): int
+var
+  a, b;
+begin
+  a = make!<array [,] of int>(2, 2);
+  a[0][1] = "hello!";
+  print!(a[0][1].length);
+  b = a.length;
+  print!(b);
+  return cast!<int>(0);
+end;

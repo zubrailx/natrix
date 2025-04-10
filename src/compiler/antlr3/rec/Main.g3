@@ -1,0 +1,314 @@
+grammar Main;
+
+options {
+  output=AST;
+  language=C;
+  ASTLabelType=pANTLR3_BASE_TREE;
+}
+
+tokens {
+  ROOT;
+  VARS;
+  VAR;
+  PARAMS;
+  PARAM;
+  ARGS;
+  FUNC;
+  ELEMS;
+  RETURN;
+  BODY;
+  CALLER;
+  INDEXER;
+  CONST_BOOL;
+  CONST_BITS;
+  CONST_HEX;
+  CONST_DEC;
+  CONST_CHAR;
+  CONST_STR;
+  TYPE;
+  BUILTIN;
+  IMPORT;
+  CLASS;
+  TEMPLATE;
+  TYPENAMES;
+  PARENTS;
+  ACCESS;  // access specifiers (public, private, protected)
+  METHODS;
+  METHOD;
+  MEMBER;
+  OP_SHR;
+  OP_SHL;
+  SPECIFIERS; // storage, function specifiers (static, inline, extern)
+}
+
+@headers{
+}
+
+// SOURCES
+source
+  : source_item* EOF -> ^(ROOT source_item*)
+  ;
+
+source_item
+  : func_def
+  | class_def
+  ;
+
+
+// TYPES
+type_ref
+  : (tr='bool' | tr='byte' | tr='int' | tr='uint' | tr='long' | tr='ulong' | tr='char' | tr='string' | tr='void' | tr='any') -> ^(TYPE $tr)
+  | identifier type_template? -> ^(TYPE identifier type_template?)
+  | 'array' '[' (elems+=',')* ']' 'of' type_ref -> ^(TYPE ^('array' ^(type_ref) ^(ELEMS $elems*)))
+  ;
+
+type_template
+  : '<' (type_ref (',' type_ref)* )? '>' -> ^(TEMPLATE type_ref*)
+  ;
+
+
+// VARIABLES & PARAMETERS
+// until ';' symbol
+var_entry
+  : (identifier (',' identifier)* (':' type_ref)? ';' ) -> ^(VAR type_ref? identifier*)
+  ;
+
+// NOTE: full rule should be ^(PARAMS param*)
+// not using fake tokens for lists because if empty then transition to this rule won't be made.
+param_list
+  : (param (',' param)*)?  -> param*
+  ;
+
+param
+  : identifier (':' type_ref)? -> ^(PARAM identifier type_ref?)
+  ;
+
+
+// FUNCTIONS
+func_def
+  : sp_extern='extern'? fn='method' func_signature func_def_sel -> ^(FUNC[$fn, "FUNC"] func_signature func_def_sel ^(SPECIFIERS $sp_extern))
+  ;
+
+// NOTE: can be resolved to empty
+func_def_sel
+  : (func_body | func_import_spec) (';'!)? | ';'!
+  ;
+
+func_signature
+  : identifier '(' param_list ')' (':' type_ref?) -> identifier ^(PARAMS param_list) ^(RETURN type_ref?)
+  ;
+
+func_body
+  : ('var' var_entry*)? statement_block -> ^(BODY ^(VARS var_entry*) ^(statement_block))
+  ;
+
+func_import_spec
+  : 'from' (import_entry=str 'in')? import_lib=str -> ^(IMPORT $import_lib $import_entry?)
+  ;
+
+
+// CLASSES
+class_def
+  : class='class' name=identifier class_typename_list? class_parent_list? ('var' var_entry*) class_method_list ';'
+      -> ^(CLASS[$class, "CLASS"] $name ^(TYPENAMES class_typename_list?) ^(PARENTS class_parent_list?) ^(VARS var_entry*) ^(METHODS class_method_list))
+  ;
+
+class_typename_list
+  : '<' (identifier (',' identifier)* )? '>' -> identifier*
+  ;
+
+class_parent_list
+  : ':' type_ref (',' type_ref)*  -> type_ref*
+  ;
+
+class_method_list
+  : 'begin'! class_method* 'end'!
+  ;
+
+class_method
+  : (access='public' | modifier='private')? func_def -> ^(METHOD func_def ^(ACCESS $access)?)
+  ;
+
+
+// STATEMENTS
+statement
+  : statement_if
+  | statement_block
+  | statement_while
+  | statement_do
+  | statement_break
+  | statement_return
+  | statement_expression
+  ;
+
+statement_if
+  : 'if' expr 'then' st_then=statement ('else' st_else=statement)? -> ^('if' expr $st_then $st_else?)
+  ;
+
+statement_block
+  : 'begin' statement* 'end' -> ^('begin' statement*)
+  ;
+
+statement_while
+  : 'while' expr 'do' statement -> ^('while' expr statement)
+  ;
+
+statement_do
+  : 'repeat' statement statement_do_condition ';' -> ^('repeat' statement_do_condition statement)
+  ;
+
+statement_do_condition
+  : 'while'^ expr
+  | 'until'^ expr
+  ;
+
+statement_break
+  : 'break' ';' -> ^('break')
+  ;
+
+statement_return
+  : 'return' expr ';' -> ^('return' expr)
+  ;
+
+statement_expression
+  : expr ';' -> ^(expr)
+  ;
+
+// EXPRESSIONS
+expr
+  : expr_14
+  ;
+
+// OPERATORS
+expr_15
+  : (expr_14 (',' expr_14)* )? -> expr_14*
+  ;
+
+// tail recursion
+expr_14
+  : expr_12 ('='^ expr_14)?
+  ;
+
+expr_12
+  : expr_11 ('||'^ expr_11)*
+  ;
+
+expr_11
+  : expr_10 ('&&'^ expr_10)*
+  ;
+
+expr_10
+  : expr_9 ('|'^ expr_9)*
+  ;
+
+expr_9
+  : expr_8 ('^'^ expr_8)*
+  ;
+
+expr_8
+  : expr_7 ('&'^ expr_7)*
+  ;
+
+expr_7
+  : expr_6 (('==' | '!=')^ expr_6)*
+  ;
+
+expr_6
+  : expr_5 (('<' | '<=' | '>' | '>=')^ expr_5)*
+  ;
+
+// NOTE: rewritten to allow template resolution, now a > > b is same as a >> b
+expr_5
+  : expr_4 ((expr_5_shl^ | expr_5_shr^) expr_4)*
+  ;
+
+expr_5_shr
+  : op='>' '>' -> ^(OP_SHR[$op, ">>"])
+  ;
+
+expr_5_shl
+  : op='<' '<' -> ^(OP_SHL[$op, "<<"])
+  ;
+
+expr_4
+  : expr_3 (('+' | '-')^ expr_3)*
+  ;
+
+expr_3
+  : expr_2 (('*' | '/' | '%')^ expr_2)*
+  ;
+
+expr_2
+  : ('--' | '++' | '!' | '~' | '+' | '-')^ expr_2
+  | expr_1
+  ;
+
+// first argument - member/args
+// second - expr_0
+expr_1
+  : (expr_0_brackets | expr_0_identifier | expr_0_builtin) ( expr_1_caller^ | expr_1_indexer^ | expr_1_member^ )*
+  | expr_0_literal
+  ;
+
+expr_1_caller
+  : '(' expr_15 ')' -> ^(CALLER ^(ARGS expr_15))
+  ;
+
+expr_1_indexer
+  : '[' expr_15 ']' -> ^(INDEXER ^(ARGS expr_15))
+  ;
+
+expr_1_member
+  : op='.' identifier -> ^(MEMBER[$op, "MEMBER"] identifier)
+  ;
+
+expr_0_brackets
+  : '('! expr ')'!
+  ;
+
+expr_0_identifier
+  : identifier
+  ;
+
+expr_0_builtin
+  : c=('cast!' | 'make!') '<' type_ref '>' '(' expr_15 ')' -> ^(BUILTIN[$c, "BUILTIN"] $c type_ref ^(ARGS expr_15))
+  | c=('print!' | 'type!') '(' expr_15 ')' -> ^(BUILTIN[$c, "BUILTIN"] $c ^(ARGS expr_15))
+  ;
+
+expr_0_literal
+  : bool | str | rune | hex | bits | dec
+  ;
+
+
+// TERMINALS
+identifier: IDENTIFIER;
+
+str: STR -> ^(CONST_STR STR);
+rune: CHAR -> ^(CONST_CHAR CHAR);
+hex: HEX -> ^(CONST_HEX HEX);
+bits: BITS -> ^(CONST_BITS BITS);
+dec: DEC -> ^(CONST_DEC DEC);
+bool: BOOL -> ^(CONST_BOOL BOOL);
+
+
+BOOL: (TRUE | FALSE) ;
+IDENTIFIER: (ALPHA | SPECIAL) (ALPHA | SPECIAL | DIGIT)* ;
+BITS: '0' ('b'|'B') BINARY_DIGIT+ ;
+HEX: '0'('x'|'X') HEX_DIGIT+ ;
+DEC: DIGIT+ ;
+CHAR: '\'' ('\\' . | ~('\\'|'\'')) '\'' ;
+STR: ('"') ('\\' . | ~('\\'|'"'))* ('"') ;
+
+SL_COMMENT: '//' ~('\n'|'\r')* '\r'? '\n' {$channel=HIDDEN;};
+ML_COMMENT: '/*' ( options {greedy=false;} : . )* '*/' {$channel=HIDDEN;};
+NEWLINE:'\r'? '\n' { $channel = HIDDEN; };
+WSS: WS+ { $channel = HIDDEN; };
+
+fragment TRUE: 'true';
+fragment FALSE: 'false';
+fragment ALPHA: ('a'..'z' | 'A'..'Z');
+fragment SPECIAL: ('_');
+fragment DIGIT: ('0'..'9');
+fragment BINARY_DIGIT: ('0' | '1');
+fragment HEX_DIGIT: ('0'..'9' | 'a'..'f' | 'A'..'F');
+fragment WS:(' '|'\t') ;

@@ -1,0 +1,25 @@
+method read_int(): int;
+method read_char(): char;
+
+method main(): void
+var
+  a, b, c, d, e, f, g, h, k, l;
+begin
+  k = make!<array[] of int>(10);
+  l = make!<array[] of int>(10, 20);
+  a = cast!<bool>(1);
+  b = cast!<byte>(2);
+  c = cast!<int>(3);
+  d = cast!<uint>(4);
+  e = cast!<long>(5);
+  f = cast!<ulong>(6);
+  g = cast!<char>(72);
+  h = "example";
+  print!(h);
+  test(e);
+end;
+
+method test(k: long):
+begin
+  print!(k);
+end;

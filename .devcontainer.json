@@ -1,0 +1,20 @@
+{
+  "build": { "dockerfile": "dockerfile" },
+  "remoteUser": "user",
+  "features": {
+    "ghcr.io/devcontainers/features/sshd:1": {},
+    "ghcr.io/devcontainers/features/common-utils:2": {
+      "installZsh": true,
+      "configureZshAsDefaultShell": true,
+      "username": "user"
+    },
+    "ghcr.io/duduribeiro/devcontainer-features/neovim:1.0.1": {},
+    "ghcr.io/duduribeiro/devcontainer-features/tmux:latest": {
+      "version": "3.4"
+    },
+    "ghcr.io/georgofenbeck/features/lazygit-linuxbinary:latest": {},
+    "ghcr.io/devcontainers-contrib/features/fzf:latest": {},
+    "ghcr.io/social-anthrax/eza-devcontainer/eza:0": {},
+    "ghcr.io/jungaretti/features/ripgrep:1": {}
+  }
+}

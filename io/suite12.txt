@@ -1,0 +1,38 @@
+class B<T>
+var
+begin
+end;
+
+class A
+var
+begin
+  public method one(a: B<array [] of int>): B<int>;
+  public method two(): int;
+  method three(a, b, c): int
+  var
+    a: array [] of long;
+    b, c: B<string>;
+  begin
+    cast!<B<B<int>>>();
+    make!<array [] of string>();
+  end
+end;
+
+method main(): void
+begin
+end;
+
+class A<T>
+var
+begin
+end;
+
+class A<T, U>
+var
+begin
+end;
+
+class B<T, U> : A<A<T>>, A<T, U>, A<int>
+var
+begin
+end;

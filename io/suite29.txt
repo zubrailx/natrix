@@ -1,0 +1,12 @@
+method fun(a, b): any
+var
+begin
+  print!(a, b);
+end;
+
+method main(): int
+var
+  a, b, c, d;
+begin
+  fun(a, b);
+end;

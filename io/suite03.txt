@@ -1,0 +1,14 @@
+method fun(): int;
+method fun2(): int;
+method fun3(): int;
+
+method main():
+var
+  e, v: int;
+  a, b, c;
+  d, f, g: int;
+begin
+  cast!<int>(e);
+  make!<int>(e);
+  print!(e);
+end;

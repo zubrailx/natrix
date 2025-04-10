@@ -1,0 +1,15 @@
+method read_int(a: int, b: int, c: int): int;
+method read_long(): long;
+method printf(s: string, a: long): void;
+
+method malloc(f: long): long;
+method free(f: long): void;
+method read_string(): string;
+
+method main():
+var
+  a, b, c, d, e, r;
+begin
+  a = read_string();
+  print!(a);
+end;

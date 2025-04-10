@@ -1,0 +1,48 @@
+method read_int(): int;
+method read_char(): char;
+
+method main(): void
+var
+  n: int;
+  i: long;
+  digits_l: long;
+  digits: array[] of int;
+  ones_c, op, s;
+begin
+  n = read_int();
+  digits_l = 2 * 100000 + 2;
+  digits = make!<array[] of int>(4 * digits_l);
+  ones_c = 0;
+
+  i = 0;
+  while i != digits_l do begin
+    digits[i] = cast!<int>(0);
+    i = i + 1;
+  end
+
+  ++n;
+  while cast!<bool>(--n) do begin
+    op = read_char();
+    s = read_int();
+
+    if (op == '+') then begin
+      while digits[s] == cast!<int>(1) do begin
+        digits[s] = cast!<int>(0);
+        --ones_c;
+        ++s;
+      end
+      digits[s] = cast!<int>(1);
+      ++ones_c;
+    end else begin
+      while digits[s] == cast!<int>(0) do begin
+        digits[s] = cast!<int>(1);
+        ++ones_c;
+        ++s;
+      end
+      digits[s] = cast!<int>(0);
+      --ones_c;
+    end
+
+    print!(ones_c);
+  end
+end;

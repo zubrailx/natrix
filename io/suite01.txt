@@ -1,0 +1,82 @@
+method read():void;
+method write(a: int):void;
+
+method fun4():
+begin
+  4;
+end;
+
+method fun3():
+begin
+  main();
+  inc_one();
+  inc_two();
+end;
+
+method fun2():
+begin
+  fun1();
+  fun3();
+end;
+
+method fun1():
+begin
+  fun1();
+  fun2();
+  fun3();
+end;
+
+method inc_one(): int from "read" in "example";
+method inc_two(): int from "example";
+
+method main(a, b):
+var
+  c, d : int;
+  e;
+  f, g: array [,] of array [,] of int;
+  n;
+begin
+  inc_one();
+  inc_two();
+
+  fun1();
+
+  repeat
+    begin
+      a = 4;
+      return 0;
+    end
+  until a != b;
+
+  main();
+
+  while (make!<int>(a) == cast!<int>(1)) do begin
+    a = 2;
+    break;
+  end
+
+  repeat
+    begin
+      a = 4;
+      break;
+    end
+  while true;
+
+  4 * 10;
+
+  a = a * b;
+
+  b = (++a * 10);
+  -(--d);
+  e = d;
+  a[4] = 5;
+
+  main(a, b);
+
+  ++n;
+  while (--n) do begin
+    a = read();
+    write(a);
+    if a == 0 then break;
+  end
+end;

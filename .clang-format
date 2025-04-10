@@ -1,0 +1,11 @@
+---
+Language: C
+AlignConsecutiveDeclarations: true
+AlignConsecutiveAssignments: true
+IndentCaseLabels: true
+---
+Language: Cpp
+AlignConsecutiveDeclarations: true
+AlignConsecutiveAssignments: true
+IndentCaseLabels: true
+---

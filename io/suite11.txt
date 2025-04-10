@@ -1,0 +1,41 @@
+class A1<A,B,C>
+var
+begin
+end;
+
+class A2<>
+var
+begin
+end;
+
+class A3
+var
+begin
+end;
+
+class A4 : A1
+var
+begin
+end;
+
+class B4 : A1, A2
+var
+begin
+end;
+
+class C<A> : A<A<>>, B
+var
+begin
+end;
+
+class D
+var
+  a: int;
+  b, c: char;
+begin
+  a > > b;
+  public method one(): int from "read" in "example";
+  public method two(): int;
+  method three(): int begin
+  end
+end;

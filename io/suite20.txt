@@ -1,0 +1,56 @@
+class A
+var
+begin
+end;
+
+class A<T>
+var
+  f: int;
+begin
+  method two(a, b, c): int
+  var
+    d: array [] of T;
+  begin
+  end
+
+  method ctor(a, b, c): A<T>
+  var
+  begin
+    return this;
+  end
+end;
+
+class A<T, U>
+var
+  e: U;
+  n;
+begin
+  extern method three(a, b, c): int
+  var
+    d: array [] of U;
+  begin
+    cast!<A<A<int>>>();
+    return 1 + 2 * 3 * a;
+  end
+end;
+
+class B<T, U> : A<T, U>, A<T>, A
+var
+  a: array [] of T;
+  b, c: byte;
+begin
+  extern method three(a, b, c): int
+  var
+    d: array [] of long;
+  begin
+  end
+end;
+
+extern method read(): void;
+extern method write(): void;
+
+method main(): int
+begin
+  make!<B<char, A<int, array [] of A<string>>>>();
+  return cast!<int>(0);
+end;

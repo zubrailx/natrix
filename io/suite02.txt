@@ -1,0 +1,40 @@
+method malloc():void;
+
+method fun_1():
+begin
+  0;
+end;
+
+method factorial_recursive(n):
+var
+  res;
+begin
+  if n == 0 then res = 0;
+  else if n == 1 then res = 1;
+  else res = cast!<long>(n) * cast!<long>(factorial_recursive(n - 1));
+  res;
+end;
+
+method fun_2(a, b, c, d, e, f, g, h):
+begin
+  print!("many args...");
+end;
+
+method main():
+var
+  e, v;
+begin
+  e = "string";
+  v = "string 2";
+  print!(e + v);
+  print!(v);
+  print!(cast!<char>(80));
+  if e == "string" then begin
+    print!("is it actually ok?");
+  end else begin
+    print!("no, not ok");
+  end
+  fun_2(e, e, e, e, e, e, e, e);
+  print!(7 * 720);
+  print!(factorial_recursive(10));
+end;
